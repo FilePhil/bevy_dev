@@ -1,6 +1,6 @@
 use bevy::{
     prelude::*,
-    window::{CursorGrabMode, PrimaryWindow},
+    window::{CursorGrabMode, PrimaryWindow, CursorOptions},
 };
 
 #[cfg(feature = "ui")]
@@ -37,7 +37,7 @@ pub(super) fn system(
         Without<PreviewCamera>,
     >,
     mut global: ResMut<DebugCameraGlobalData>,
-    mut window: Query<&mut Window, With<PrimaryWindow>>,
+    mut cursor_options: Query<&mut CursorOptions, With<PrimaryWindow>>,
     #[cfg(feature = "ui")] mut popup_event: MessageWriter<PopupEvent>,
 ) {
     let mut is_any_debug_camera_active = false;
@@ -93,8 +93,8 @@ pub(super) fn system(
     }
 
     if is_any_debug_camera_active {
-        let Ok(mut primary_window) = window.single_mut() else {
-            error!("Expected primary window to exist");
+        let Ok(mut primary_cursor_options) = cursor_options.single_mut() else {
+            error!("Expected primary cursor_options to exist");
             return;
         };
 
@@ -105,15 +105,15 @@ pub(super) fn system(
         {
             global.last_used_origin_camera = Some(DebugCameraLastUsedOriginCameraData {
                 camera: entity,
-                cursor: primary_window.cursor_options.clone(),
+                cursor: primary_cursor_options.clone(),
             });
 
             camera.is_active = false;
         }
 
         // Lock cursor
-        primary_window.cursor_options.grab_mode = CursorGrabMode::Locked;
-        primary_window.cursor_options.visible = false;
+        primary_cursor_options.grab_mode = CursorGrabMode::Locked;
+        primary_cursor_options.visible = false;
     } else {
         // Switch to game camera if no debug camera is active
         if let Some(last) = global.last_used_origin_camera.take() {
@@ -123,11 +123,11 @@ pub(super) fn system(
             }
 
             // Set cursor
-            let Ok(mut primary_window) = window.single_mut() else {
-                error!("Expected primary window to exist");
+            let Ok(mut primary_cursor_options) = cursor_options.single_mut() else {
+                error!("Expected primary cursor_options to exist");
                 return;
             };
-            primary_window.cursor_options = last.cursor;
+            *primary_cursor_options = last.cursor;
 
             // Notify user
             bevy::log::info!("Switched to game camera");
