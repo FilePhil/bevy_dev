@@ -6,13 +6,13 @@ use std::{
 };
 
 use bevy::{
-    asset::weak_handle,
+    asset::{weak_handle,RenderAssetUsages},
     image::{CompressedImageFormats, ImageFormat, ImageSampler, ImageType},
     prelude::*,
     render::{
-        render_asset::RenderAssetUsages,
-        render_resource::{AsBindGroup, ShaderRef},
+        render_resource::{AsBindGroup},
     },
+    shader::ShaderRef
 };
 use random_color::{options::Luminosity, RandomColor};
 
@@ -125,8 +125,8 @@ fn initialization(
                 )
                 .expect("Prototype material shader is not valid UTF-8"),
                 SHADER_PATH,
-            ),
-        )
+            )
+        ).expect("REASON")
     }
 
     for (entity, material) in entities.iter_mut() {

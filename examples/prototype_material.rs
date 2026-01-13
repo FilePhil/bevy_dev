@@ -1,6 +1,6 @@
 use std::f32::consts::PI;
 
-use bevy::{pbr::CascadeShadowConfigBuilder, prelude::*};
+use bevy::{light::CascadeShadowConfigBuilder, prelude::*};
 use bevy_dev::prelude::*;
 
 #[bevy_main]

@@ -47,9 +47,10 @@ struct PrototypeMaterial {
     color: vec4f,
 };
 
-@group(2) @binding(0) var<uniform> material: PrototypeMaterial;
-@group(2) @binding(1) var base_texture: texture_2d<f32>;
-@group(2) @binding(2) var base_sampler: sampler;
+
+@group(#{MATERIAL_BIND_GROUP}) @binding(0) var<uniform> material: PrototypeMaterial;
+@group(#{MATERIAL_BIND_GROUP}) @binding(1) var base_texture: texture_2d<f32>;
+@group(#{MATERIAL_BIND_GROUP}) @binding(2) var base_sampler: sampler;
 
 fn sample_triplanar(texture: texture_2d<f32>, texture_sampler: sampler, position: vec3f, normal: vec3f) -> vec4f {
     let threshold = 0.8;
