@@ -1,7 +1,6 @@
 use bevy::{
     prelude::*,
     render::{
-        camera::RenderTarget,
         render_resource::{
             Extent3d, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
         },
@@ -130,7 +129,7 @@ fn attach_image_to_new_debug_camera(
 
         commands.entity(entity).insert(DebugCameraPreview {
             image: handle.clone(),
-            texture_id: textures.add_image(handle),
+            texture_id: textures.add_image(bevy_egui::EguiTextureHandle::Strong(handle)),
             last_render_time: 0.0,
         });
     }
@@ -180,7 +179,7 @@ fn render_to_preview(
     debug_camera.0.last_render_time = time.elapsed_secs();
 
     let image_render_target = debug_camera.0.image.clone().into();
-    preview_camera.0.target = RenderTarget::Image(image_render_target);
+    preview_camera.0.target = image_render_target;
     preview_camera.0.is_active = true;
 
     *preview_camera.1 = *debug_camera.1;
