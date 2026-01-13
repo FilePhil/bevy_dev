@@ -23,7 +23,7 @@ pub(crate) struct PopupPlugin;
 
 impl Plugin for PopupPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<PopupEvent>()
+        app.add_message::<PopupEvent>()
             .add_systems(
                 PostUpdate,
                 write_storage.before(render_primary).before(render_debug),
@@ -42,7 +42,7 @@ pub enum PopupPosition {
 }
 
 /// Event for showing a popup.
-#[derive(Event, Clone)]
+#[derive(Message, Clone)]
 pub struct PopupEvent {
     position: PopupPosition,
     duration: f32,
@@ -53,7 +53,7 @@ pub struct PopupEvent {
 impl PopupEvent {
     /// Creates a new popup event with the given position, time and UI contents.
     /// # Remarks
-    /// Handly create value should be sent to the world via [`EventWriter<PopupEvent>`] to show it on the screen,
+    /// Handly create value should be sent to the world via [`MessageWriter<PopupEvent>`] to show it on the screen,
     /// otherwise [`super::popup`] can be used to show it without the events.
     pub fn new(
         position: PopupPosition,
@@ -102,13 +102,13 @@ struct RenderData {
     last: Option<PopupEvent>,
 }
 
-fn write_storage(mut events: EventWriter<PopupEvent>) {
+fn write_storage(mut events: MessageWriter<PopupEvent>) {
     if let Some(event) = STORAGE.lock().expect("unable to get popup storage").take() {
         events.write(event);
     }
 }
 
-fn get_last_popup(events: &mut EventReader<PopupEvent>) -> Option<PopupEvent> {
+fn get_last_popup(events: &mut MessageReader<PopupEvent>) -> Option<PopupEvent> {
     let mut last = None;
     for event in events.read() {
         last = Some(event);
@@ -118,7 +118,7 @@ fn get_last_popup(events: &mut EventReader<PopupEvent>) -> Option<PopupEvent> {
 
 fn render_primary(
     mut ctx: Single<(&mut EguiContext, &Camera), With<PrimaryEguiContext>>,
-    mut events: EventReader<PopupEvent>,
+    mut events: MessageReader<PopupEvent>,
     mut local: Local<RenderData>,
     time: Res<Time>,
 ) {
@@ -134,7 +134,7 @@ fn render_primary(
 
 fn render_debug(
     mut ctx: Single<&mut EguiContext, With<DebugCameraActive>>,
-    mut events: EventReader<PopupEvent>,
+    mut events: MessageReader<PopupEvent>,
     mut local: Local<RenderData>,
     time: Res<Time>,
 ) {

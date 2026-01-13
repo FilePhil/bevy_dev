@@ -268,7 +268,7 @@ fn switcher(
     >,
     keys: Res<ButtonInput<KeyCode>>,
     controls: Res<DebugCameraControls>,
-    #[cfg(feature = "ui")] mut popup_event: EventWriter<PopupEvent>,
+    #[cfg(feature = "ui")] mut popup_event: MessageWriter<PopupEvent>,
     #[cfg(feature = "ui")] time: Res<Time>,
 ) {
     if !keys.pressed(controls.switcher_special) {
@@ -365,8 +365,8 @@ fn select_next_camera_key_event(
 fn spawn_debug_camera_if_any_camera_exist(
     global: ResMut<DebugCameraGlobalData>,
     mut commands: Commands,
-    mut mouse_motion: EventReader<MouseMotion>,
-    mut mouse_wheel: EventReader<MouseWheel>,
+    mut mouse_motion: MessageReader<MouseMotion>,
+    mut mouse_wheel: MessageReader<MouseWheel>,
     #[cfg(not(feature = "ui"))] query: Query<(), With<Camera>>,
     #[cfg(feature = "ui")] query: Query<(), (With<Camera>, Without<ui::PreviewCamera>)>,
 ) {

@@ -30,7 +30,7 @@ pub(super) fn debug_camera_selector_ui(
         Option<&DebugCameraPreview>,
     )>,
     global: &mut ResMut<DebugCameraGlobalData>,
-    popup_event: &mut EventWriter<PopupEvent>,
+    popup_event: &mut MessageWriter<PopupEvent>,
 ) {
     let mut data = Vec::new();
     for entity in global.last_used_debug_cameras.iter() {

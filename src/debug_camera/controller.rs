@@ -20,12 +20,12 @@ pub(super) fn system(
         &mut DebugCamera,
         &Camera,
     )>,
-    mut mouse_motion: EventReader<MouseMotion>,
-    mut mouse_wheel: EventReader<MouseWheel>,
+    mut mouse_motion: MessageReader<MouseMotion>,
+    mut mouse_wheel: MessageReader<MouseWheel>,
     time: Res<Time>,
     keys: Res<ButtonInput<KeyCode>>,
     controls: Res<DebugCameraControls>,
-    #[cfg(feature = "ui")] mut popup_event: EventWriter<PopupEvent>,
+    #[cfg(feature = "ui")] mut popup_event: MessageWriter<PopupEvent>,
 ) {
     let (mut transform, mut data, mut debug_camera, _) =
         match cameras.iter_mut().find(|x| x.3.is_active) {

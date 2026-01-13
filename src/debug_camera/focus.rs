@@ -38,7 +38,7 @@ pub(super) fn system(
     >,
     mut global: ResMut<DebugCameraGlobalData>,
     mut window: Query<&mut Window, With<PrimaryWindow>>,
-    #[cfg(feature = "ui")] mut popup_event: EventWriter<PopupEvent>,
+    #[cfg(feature = "ui")] mut popup_event: MessageWriter<PopupEvent>,
 ) {
     let mut is_any_debug_camera_active = false;
     for (entity, mut camera, mut debug_camera, data) in cameras
